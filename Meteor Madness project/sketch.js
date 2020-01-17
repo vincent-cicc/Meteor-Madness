@@ -51,7 +51,11 @@ function draw() {
     if(s.position.y>height+MARGIN) s.position.y = -MARGIN;
   }
 
-  meteor.overlap(bullets, meteorHit); // when meteor gets hit by the bullet it calls the meteorHit function
+// when meteor gets hit by the bullet it calls the meteorHit function
+  meteor.overlap(bullets, meteorHit);
+  
+// when meteor hits ship it calls shipHit function
+  ship.overlap(meteor, shipHit); 
 
 // makes ship bounce when meteor hits it 
   ship.bounce(meteor);
@@ -99,7 +103,7 @@ function createAsteroid(type, x, y) {
   return a;
 }
 
-// meteorHit function creates smaller meteors
+// meteorHit function creates smaller meteors and removes bullet and meteor that was hit
 function meteorHit(meteor, bullet) {
   var newType = meteor.type-1;
 
@@ -118,4 +122,10 @@ function meteorHit(meteor, bullet) {
 
   bullet.remove();
   meteor.remove();
+}
+// shipHit function subtracts lives and chages ship x and y 
+function shipHit(ship, meteor){
+	lives = lives - 1;
+	ship.position.x = width/2;
+	ship.position.y = height/2;
 }
