@@ -42,6 +42,11 @@ function draw() {
   text('Controls: Arrow Keys + space', width/2, 20);
   text('Lives = ' + lives , 50, 20);
 
+//when the ship live = 0 it ends the game
+  if(lives === 0){
+	ship.remove();
+	text('GAME OVER' , width/2, height/2);
+  }
 //sets postions for all sprites
   for(var i=0; i<allSprites.length; i++) { //margins called here
     var s = allSprites[i];
