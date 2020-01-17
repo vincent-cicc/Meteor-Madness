@@ -3,6 +3,7 @@ var asteroids;
 var ship;
 var shipImage, bulletImage, meteorImage;
 var MARGIN = 40;
+var lives = 3;
 
 //creates sprite
 function setup() {
@@ -37,6 +38,7 @@ function draw() {
   fill(255);
   textAlign(CENTER);
   text('Controls: Arrow Keys + space', width/2, 20);
+  text('Lives = ' + lives , 50, 20);
 
   for(var i=0; i<allSprites.length; i++) {
     var s = allSprites[i];
@@ -49,6 +51,9 @@ function draw() {
   asteroids.overlap(bullets, asteroidHit);
 
   ship.bounce(asteroids);
+  if(ship.bounce===true){
+	  lives = lives - 10;
+	}
 
   if(keyDown(LEFT_ARROW))
     ship.rotation -= 4;
@@ -56,17 +61,15 @@ function draw() {
     ship.rotation += 4;
   if(keyDown(UP_ARROW))
   {
-    ship.addSpeed(0.2, ship.rotation-90);
+    ship.addSpeed(100, ship.rotation-90);
   }
-  else
-    ship.changeAnimation('normal');
 
   if(keyWentDown(' '))
   {
     var bullet = createSprite(ship.position.x, ship.position.y);
     bullet.addImage(bulletImage);
 	bullet.rotation = ship.rotation;
-    bullet.setSpeed(10+ship.getSpeed(), ship.rotation-90);
+    bullet.setSpeed(10, ship.rotation-90);
     bullet.life = 30;
     bullets.add(bullet);
   }
