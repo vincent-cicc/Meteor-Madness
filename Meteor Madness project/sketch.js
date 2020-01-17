@@ -1,8 +1,8 @@
-var bullets; 
-var asteroids;
-var ship;
-var shipImage, bulletImage, meteorImage;
-var MARGIN = 40;
+var bullets; //bullet 
+var meteor; // meteor
+var ship; // ship
+var shipImage, bulletImage, meteorImage; // images for ship,bullet,meteor
+var MARGIN = 40; // help set postions for all sprites
 var lives = 3;
 
 //creates sprite
@@ -13,15 +13,16 @@ function setup() {
   shipImage = loadImage('Newspaceship.png');
   meteorImage = loadImage('');
 
+//creates ship
   ship = createSprite(width/2, height/2);
   ship.maxSpeed = 6;
   ship.friction = 0.98;
   ship.setCollider('circle', 0, 0, 20);
 
-  ship.addImage('normal', shipImage);
+  ship.addImage('normal', shipImage); //addes the ship image
  
 
-  asteroids = new Group();
+  meteor = new Group(); //
   bullets = new Group();
 
   for(var i = 0; i<8; i++) {
@@ -37,10 +38,12 @@ function draw() {
   background(0);
   fill(255);
   textAlign(CENTER);
+  //writes text on canvas
   text('Controls: Arrow Keys + space', width/2, 20);
   text('Lives = ' + lives , 50, 20);
 
-  for(var i=0; i<allSprites.length; i++) {
+//sets postions for all sprites
+  for(var i=0; i<allSprites.length; i++) { //margins called here
     var s = allSprites[i];
     if(s.position.x<-MARGIN) s.position.x = width+MARGIN;
     if(s.position.x>width+MARGIN) s.position.x = -MARGIN;
@@ -48,12 +51,10 @@ function draw() {
     if(s.position.y>height+MARGIN) s.position.y = -MARGIN;
   }
 
-  asteroids.overlap(bullets, asteroidHit);
+  meteor.overlap(bullets, meteorHit); // when meteor gets hit by the bullet it calls the meteorHit function
 
-  ship.bounce(asteroids);
-  if(ship.bounce===true){
-	  lives = lives - 10;
-	}
+// makes ship bounce when meteor hits it 
+  ship.bounce(meteor);
 
   if(keyDown(LEFT_ARROW))
     ship.rotation -= 4;
@@ -94,17 +95,17 @@ function createAsteroid(type, x, y) {
 
   a.mass = 2+a.scale;
   a.setCollider('circle', 0, 0, 50);
-  asteroids.add(a);
+  meteor.add(a);
   return a;
 }
 
-//when the meteor gets hit
-function asteroidHit(asteroid, bullet) {
-  var newType = asteroid.type-1;
+// meteorHit function creates smaller meteors
+function meteorHit(meteor, bullet) {
+  var newType = meteor.type-1;
 
   if(newType>0) {
-    createAsteroid(newType, asteroid.position.x, asteroid.position.y);
-    createAsteroid(newType, asteroid.position.x, asteroid.position.y);
+    createAsteroid(newType, meteor.position.x, meteor.position.y);
+    createAsteroid(newType, meteor.position.x, meteor.position.y);
   }
 
   for(var i=0; i<10; i++) {
@@ -116,5 +117,5 @@ function asteroidHit(asteroid, bullet) {
   }
 
   bullet.remove();
-  asteroid.remove();
+  meteor.remove();
 }
