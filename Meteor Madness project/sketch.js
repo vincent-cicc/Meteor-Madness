@@ -1,6 +1,7 @@
 var bullets; //bullet 
 var meteor; // meteor
 var ship; // ship
+var medkit; // medkit 
 var shipImage, bulletImage, meteorImage; // images for ship,bullet,meteor
 var MARGIN = 40; // help set postions for all sprites
 var lives = 3;
@@ -12,6 +13,7 @@ function setup() {
   bulletImage = loadImage('bullet.png');
   shipImage = loadImage('Newspaceship.png');
   meteorImage = loadImage('');
+  medkitImage = loadImage('health.png');
 
 //creates ship
   ship = createSprite(width/2, height/2);
@@ -44,6 +46,7 @@ function draw() {
 
 //when the ship live = 0 it ends the game
   if(lives === 0){
+	ship.position.x = width;
 	ship.remove();
 	text('GAME OVER' , width/2, height/2);
   }
