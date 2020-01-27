@@ -6,7 +6,7 @@ var shipImage, bulletImage, meteorImage; // images for ship,bullet,meteor
 var MARGIN = 40; // help set postions for all sprites
 var lives = 3;
 var score = 0;
-
+var timerInt = 25000;//meteor spawn timer interval
 //creates sprite
 function setup() {
   createCanvas(800, 600);
@@ -44,7 +44,7 @@ function setup() {
     var py = height/2+ 1000 * sin(radians(ang));
     createMedkit(3, px, py);
   }
-  
+  setInterval(respawn, timerInt);
 }
 
 // draws sprites and has they code for when keys are down
@@ -85,9 +85,9 @@ function draw() {
   ship.bounce(meteor);
 
   if(keyDown(LEFT_ARROW))
-    ship.rotation -= 4;
+    ship.rotation -= 3;
   if(keyDown(RIGHT_ARROW))
-    ship.rotation += 4;
+    ship.rotation += 3;
   if(keyDown(UP_ARROW))
   {
     ship.addSpeed(100, ship.rotation-90);
@@ -102,6 +102,10 @@ function draw() {
     bullet.life = 30;
     bullets.add(bullet);
   }
+  if(keyDown('a'))
+    ship.rotation -= 10;
+  if(keyDown('d'))
+    ship.rotation += 10;
 
   drawSprites();
 
@@ -125,6 +129,7 @@ function createAsteroid(type, x, y) {
   a.setCollider('circle', 0, 0, 50);
   meteor.add(a);
   return a;
+  
 }
 
 // makes medkit
@@ -149,7 +154,6 @@ function createMedkit(type, x, y) {
 function meteorHit(meteor, bullet) {
   score = score + 10;
   var newType = meteor.type-1;
-
   if(newType>0) {
     createAsteroid(newType, meteor.position.x, meteor.position.y);
     createAsteroid(newType, meteor.position.x, meteor.position.y);
@@ -165,6 +169,9 @@ function meteorHit(meteor, bullet) {
 
   bullet.remove();
   meteor.remove();
+  
+  if(score > 1000)
+	  timerInt = timerInt - 50;
 }
 // shipHit function subtracts lives and chages ship x and y 
 function shipHit(ship, meteor){
@@ -175,6 +182,12 @@ function shipHit(ship, meteor){
 
 // medkitHit function adds a live and remove the medkit
 function medkitHit(ship, medkit){
-	lives = lives + 1;
+	lives = lives + 1; 
 	medkit.remove();
+}
+function respawn(){
+	createAsteroid(3, 0, 0);
+	createAsteroid(3, 0, height);
+	createAsteroid(3, width, 0);
+	createAsteroid(3, width, height);
 }
